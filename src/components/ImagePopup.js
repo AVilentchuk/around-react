@@ -5,8 +5,14 @@ const ImagePopup = (props) => {
   const { link, name, avatar } = targetObj;
 
   const navArray = [
-    <div className='navigation-arrow navigation-arrow_left'></div>,
-    <div className='navigation-arrow navigation-arrow_right'></div>,
+    <div
+      key={"leftNav"}
+      className='navigation-arrow navigation-arrow_left'
+    ></div>,
+    <div
+      key={"rightNav"}
+      className='navigation-arrow navigation-arrow_right'
+    ></div>,
   ];
 
   return (

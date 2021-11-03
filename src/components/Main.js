@@ -82,6 +82,7 @@ const Main = (props) => {
               cardData={item}
               userId={userInfo._id}
               onCardLike={cardLike}
+              key={item._id}
             />);
           })}
         </section>
