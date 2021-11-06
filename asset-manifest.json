@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/around-react/static/css/main.fc1b498d.chunk.css",
-    "main.js": "/around-react/static/js/main.1ca58749.chunk.js",
-    "main.js.map": "/around-react/static/js/main.1ca58749.chunk.js.map",
+    "main.css": "/around-react/static/css/main.48545d1a.chunk.css",
+    "main.js": "/around-react/static/js/main.25bad256.chunk.js",
+    "main.js.map": "/around-react/static/js/main.25bad256.chunk.js.map",
     "runtime-main.js": "/around-react/static/js/runtime-main.19ddbcd8.js",
     "runtime-main.js.map": "/around-react/static/js/runtime-main.19ddbcd8.js.map",
     "static/js/2.901e079e.chunk.js": "/around-react/static/js/2.901e079e.chunk.js",
@@ -10,7 +10,7 @@
     "static/js/3.fa2efbcf.chunk.js": "/around-react/static/js/3.fa2efbcf.chunk.js",
     "static/js/3.fa2efbcf.chunk.js.map": "/around-react/static/js/3.fa2efbcf.chunk.js.map",
     "index.html": "/around-react/index.html",
-    "static/css/main.fc1b498d.chunk.css.map": "/around-react/static/css/main.fc1b498d.chunk.css.map",
+    "static/css/main.48545d1a.chunk.css.map": "/around-react/static/css/main.48545d1a.chunk.css.map",
     "static/js/2.901e079e.chunk.js.LICENSE.txt": "/around-react/static/js/2.901e079e.chunk.js.LICENSE.txt",
     "static/media/index.css": "/around-react/static/media/Vector.b97e3978.svg",
     "static/media/Logo_vector.e57222ff.svg": "/around-react/static/media/Logo_vector.e57222ff.svg",
@@ -19,7 +19,7 @@
   "entrypoints": [
     "static/js/runtime-main.19ddbcd8.js",
     "static/js/2.901e079e.chunk.js",
-    "static/css/main.fc1b498d.chunk.css",
-    "static/js/main.1ca58749.chunk.js"
+    "static/css/main.48545d1a.chunk.css",
+    "static/js/main.25bad256.chunk.js"
   ]
 }
