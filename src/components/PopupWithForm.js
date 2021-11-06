@@ -1,14 +1,16 @@
-import React from "react";
-
-const PopupWithForm = (props) => {
+const PopupWithForm = ({
+  children,
+  formName,
+  formHeader,
+  onClose,
+  id,
+  isOpen,
+}) => {
   return (
-    <div
-      className={`popup ${props.isOpen ? "popup_active" : ""}`}
-      onClick={props.onClose}
-    >
+    <div className={`popup ${isOpen ? "popup_active" : ""}`} onClick={onClose}>
       <div
         className='popup__window'
-        id={props.id}
+        id={id}
         onClick={(event) => {
           event.stopPropagation();
         }}
@@ -17,11 +19,11 @@ const PopupWithForm = (props) => {
           className='button button_type_close'
           type='button'
           aria-label='Close window'
-          onClick={props.onClose}
+          onClick={onClose}
         ></button>
-        <h2 className='popup__title'>{props.formHeader}</h2>
-        <form className='form' name={`${props.formName}`}>
-          {props.children}
+        <h2 className='popup__title'>{formHeader}</h2>
+        <form className='form' name={`${formName}`}>
+          {children}
           <button
             className='button button_type_submit button_disabled'
             type='submit'

@@ -1,5 +1,3 @@
-import React from "react";
-
 const ImagePopup = ({ navigation, targetObj, isOpen, onClose, id }) => {
   const { link, name, avatar } = targetObj;
 

@@ -1,16 +1,18 @@
-import React from "react";
+import { useState, useEffect, createRef } from "react";
 
 const Card = ({ cardData, onClick, onCardLike, userId }) => {
-  const tooltip = React.createRef();
+  const tooltip = createRef();
   const { name, likes, link, _id: id } = cardData;
   const liked = likes.some((like) => like._id === userId);
 
   //I have no idea how to conditionally render the tooltip without using a useState , would love to hear suggestions
   //After consulting with the educational team they said it was implemented correctly, and didn't give me any ideas.
-  const [isTooltip, setIsTooltip] = React.useState(false);
+  const [isTooltipShown, setIsTooltipShown] = useState(false);
 
-  React.useEffect(() => {
-    setIsTooltip(tooltip.current.clientWidth < tooltip.current.scrollWidth);
+  useEffect(() => {
+    setIsTooltipShown(
+      tooltip.current.clientWidth < tooltip.current.scrollWidth
+    );
   }, [tooltip]);
 
   const handleLikeClick = () => onCardLike(id, liked);
@@ -43,16 +45,18 @@ const Card = ({ cardData, onClick, onCardLike, userId }) => {
               id='likebtn'
               aria-label='heart icon (like)'
               onClick={handleLikeClick}
-            ></button>
+            />
             <label
               className='card__like-label'
               htmlFor='likebtn'
               style={{ visibility: likes.length ? "visible" : "hidden" }}
             >
-              {`${likes.length}`}
+              {likes.length}
             </label>
           </div>
-          {isTooltip && <div className='card__overflow-tooltip'>{name}</div>}
+          {isTooltipShown && (
+            <div className='card__overflow-tooltip'>{name}</div>
+          )}
         </div>
       </div>
     </div>
