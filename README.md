@@ -73,7 +73,7 @@ This is a refactoring of a previous project as react project, to run it locally 
 * Run npm install and wait until it completes
 * Use ```npm start``` to run the project on localhost:3000 ; ctrl+C in the command prompt to stop running the project.
 
-FYI the project is not yet fully functional this well be repaired in the following updates.
+FYI the project is not yet fully functional this will be repaired in the following updates.
 
 ### Built With
 
