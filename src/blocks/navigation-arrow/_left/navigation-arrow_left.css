@@ -6,7 +6,7 @@
   height: 0px;
   border-top: 100px solid transparent;
   border-bottom: 100px solid transparent;
-  border-left: unset;
+  border-left: 0px;
   border-right: min(3.7vw, 40px) solid white;
   transition: opacity 0.2s ease-in-out, border-right-width 0.2s ease-in-out;
 }

@@ -5,8 +5,6 @@ const Card = ({ cardData, onClick, onCardLike, userId }) => {
   const { name, likes, link, _id: id } = cardData;
   const liked = likes.some((like) => like._id === userId);
 
-  //I have no idea how to conditionally render the tooltip without using a useState , would love to hear suggestions
-  //After consulting with the educational team they said it was implemented correctly, and didn't give me any ideas.
   const [isTooltipShown, setIsTooltipShown] = useState(false);
 
   useEffect(() => {
@@ -23,6 +21,7 @@ const Card = ({ cardData, onClick, onCardLike, userId }) => {
 
   return (
     <div>
+      {console.log(likes)}
       <div className='card'>
         {cardData.owner._id === userId && (
           <button className='button button_type_delete' type='click'></button>
@@ -48,7 +47,6 @@ const Card = ({ cardData, onClick, onCardLike, userId }) => {
             />
             <label
               className='card__like-label'
-              htmlFor='likebtn'
               style={{ visibility: likes.length ? "visible" : "hidden" }}
             >
               {likes.length}

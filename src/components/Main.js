@@ -1,11 +1,11 @@
-import React from "react";
+import { useEffect, useState } from "react";
 import Card from "./Card";
 import mainApi from "../utils/Api";
 import profilePhoto from "../assets/images/avatar_photo.png";
 
 const Main = ({ setUserData, userInfo, onEditProfileClick, onAddPlaceClick, onEditAvatarClick, onEnlargeAvatarClick, onCardClick }) => {
   //States
-  const [cardsData, setCardsData] = React.useState([]);
+  const [cardsData, setCardsData] = useState([]);
   //<<START>> ASync functions <<START>>
   const getCards = async () => {
     try {
@@ -16,8 +16,10 @@ const Main = ({ setUserData, userInfo, onEditProfileClick, onAddPlaceClick, onEd
   }
 
   const getUserInfo = async () => {
-    const callData = await mainApi.getProfile()
-    setUserData(callData);
+    try {
+      const callData = await mainApi.getProfile()
+      setUserData(callData);
+    } catch (error) { console.log(error) }
   }
 
   const likeCard = async (id, status) => {
@@ -36,7 +38,7 @@ const Main = ({ setUserData, userInfo, onEditProfileClick, onAddPlaceClick, onEd
   //<<END>> ASync functions <<END>>
 
   //initialization
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     getCards();
     getUserInfo();
   }, []);
