@@ -3,37 +3,53 @@ import Card from "./Card";
 import mainApi from "../utils/Api";
 import profilePhoto from "../assets/images/avatar_photo.png";
 
-const Main = (props) => {
-
-  const [cardData, setCardData] = React.useState([]);
-  const [userInfo, setUserInfo] = React.useState({});
-
+const Main = ({ setUserData, userInfo, onEditProfileClick, onAddPlaceClick, onEditAvatarClick, onEnlargeAvatarClick, onCardClick }) => {
+  //States
+  const [cardsData, setCardsData] = React.useState([]);
+  //<<START>> ASync functions <<START>>
   const getCards = async () => {
-    const res = await mainApi.getInitialCards();
-    return res;
+    try {
+      const callData = await mainApi.getInitialCards();
+      setCardsData(callData)
+    }
+    catch (error) { console.log(error) }
   }
 
-  const cardLike = async (id, status) => {
-    const result =
-      status ?
-        await mainApi.dislikePhoto(id) :
-        await mainApi.likePhoto(id);
-    return result
+  const getUserInfo = async () => {
+    const callData = await mainApi.getProfile()
+    setUserData(callData);
+  }
+
+  const likeCard = async (id, status) => {
+    if (status)
+      try {
+        const result = await mainApi.dislikePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
+        setCardsData(result)
+      }
+      catch (error) { console.log(error) } else
+      try {
+        const result = await mainApi.likePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
+        setCardsData(result);
+      }
+      catch (error) { console.log(error) };
   };
+  //<<END>> ASync functions <<END>>
 
-  React.useEffect(() => {
-    getCards().then(res => {
-      return setCardData(res)
-    }).catch((error) => {
-      setCardData();
-      console.log(`${error}`);
-    })
+  //initialization
+  React.useLayoutEffect(() => {
+    getCards();
+    getUserInfo();
+  }, []);
 
-  }, []);
-  React.useEffect(() => {
-    mainApi.getProfile().then((res => setUserInfo(res))
-    )
-  }, []);
+  //RenderCards function.
+  const renderCard = (item) =>
+  (<Card
+    onClick={onCardClick}
+    cardData={item}
+    userId={userInfo._id}
+    onCardLike={likeCard}
+    key={item._id}
+  />)
 
   return (
     <div>
@@ -48,10 +64,10 @@ const Main = (props) => {
             <div className='profile__photo-buttons'>
               <button
                 className='button button_type_edit-profile-image'
-                onClick={props.onEditAvatarClick}
+                onClick={onEditAvatarClick}
               ></button>
               <button className='button button_type_enlarge-profile-image'
-                onClick={() => { props.onEnlargeAvatarClick(userInfo) }}></button>
+                onClick={() => { onEnlargeAvatarClick(userInfo) }}></button>
             </div>
           </div>
           <div className='profile__description'>
@@ -60,7 +76,7 @@ const Main = (props) => {
               className='button profile__button-edit'
               type='button'
               aria-label='Edit profile'
-              onClick={props.onEditProfileClick}
+              onClick={onEditProfileClick}
             ></button>
             <p className='profile__about'>
               {userInfo ? userInfo.about : 'Travel guide, food enthusiastic and culture lover'}
@@ -70,21 +86,12 @@ const Main = (props) => {
             className='button profile__button-add'
             type='button'
             aria-label='Add or create new profile'
-            onClick={props.onAddPlaceClick}
+            onClick={onAddPlaceClick}
           ></button>
         </section>
 
         <section className='locations'>
-          {/* condition added to not crash react when the server is down */}
-          {cardData && cardData.map((item) => {
-            return (<Card
-              onClick={props.onCardClick}
-              cardData={item}
-              userId={userInfo._id}
-              onCardLike={cardLike}
-              key={item._id}
-            />);
-          })}
+          {cardsData.map(card => renderCard(card))}
         </section>
       </main>
     </div>

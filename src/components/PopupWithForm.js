@@ -6,7 +6,13 @@ const PopupWithForm = (props) => {
       className={`popup ${props.isOpen ? "popup_active" : ""}`}
       onClick={props.onClose}
     >
-      <div className='popup__window' id={props.id}>
+      <div
+        className='popup__window'
+        id={props.id}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
         <button
           className='button button_type_close'
           type='button'

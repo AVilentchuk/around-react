@@ -1,30 +1,36 @@
 import React from "react";
 
-const ImagePopup = (props) => {
-  const { navigation, targetObj } = props;
+const ImagePopup = ({ navigation, targetObj, isOpen, onClose, id }) => {
   const { link, name, avatar } = targetObj;
 
-  const navArray = [
+  const navigationArrows = [
     <div
-      key={"leftNav"}
+      key='leftNav'
       className='navigation-arrow navigation-arrow_left'
     ></div>,
     <div
-      key={"rightNav"}
+      key='rightNav'
       className='navigation-arrow navigation-arrow_right'
     ></div>,
   ];
 
   return (
     <div
-      className={`popup popup_gallery ${props.isOpen ? "popup_active" : ""}`}
+      className={`popup popup_gallery ${isOpen ? "popup_active" : ""}`}
+      onClick={onClose}
     >
-      <div className='popup__gallery' id={"props.id"}>
+      <div
+        className='popup__gallery'
+        id={id}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
+      >
         <button
           className='button button_type_close'
           type='button'
           aria-label='Close window'
-          onClick={props.onClose}
+          onClick={onClose}
         ></button>
         <img
           className='popup__img'
@@ -32,7 +38,7 @@ const ImagePopup = (props) => {
           alt={name}
         />
         <h2 className='popup__place-name'>{name}</h2>
-        {navigation && navArray}
+        {navigation && navigationArrows}
       </div>
     </div>
   );
