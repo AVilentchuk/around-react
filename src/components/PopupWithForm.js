@@ -5,8 +5,10 @@ const PopupWithForm = ({
   onClose,
   id,
   isOpen,
+  onSubmit
 }) => {
   return (
+
     <div className={`popup ${isOpen ? "popup_active" : ""}`} onClick={onClose}>
       <div
         className='popup__window'
@@ -25,8 +27,9 @@ const PopupWithForm = ({
         <form className='form' name={`${formName}`}>
           {children}
           <button
-            className='button button_type_submit button_disabled'
+            className='button button_type_submit'
             type='submit'
+            onClick={onSubmit}
           >
             Save
           </button>

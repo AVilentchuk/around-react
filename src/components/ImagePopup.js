@@ -1,16 +1,31 @@
-const ImagePopup = ({ navigation, targetObj, isOpen, onClose, id }) => {
-  const { link, name, avatar } = targetObj;
+import { useEffect, useState } from "react";
 
+const ImagePopup = ({
+  navigation,
+  targetObj,
+  isOpen,
+  onClose,
+  id,
+  useKey,
+  goLeft,
+  goRight,
+}) => {
   const navigationArrows = [
     <div
       key='leftNav'
       className='navigation-arrow navigation-arrow_left'
+      onClick={goLeft}
     ></div>,
     <div
       key='rightNav'
       className='navigation-arrow navigation-arrow_right'
+      onClick={goRight}
     ></div>,
   ];
+
+  useKey("ArrowRight", goRight);
+  useKey("ArrowLeft", goLeft);
+  useKey("Escape", onClose);
 
   return (
     <div
@@ -32,10 +47,20 @@ const ImagePopup = ({ navigation, targetObj, isOpen, onClose, id }) => {
         ></button>
         <img
           className='popup__img'
-          src={link ? link : avatar ? avatar : ""}
-          alt={name}
+          src={
+            !targetObj
+              ? null
+              : targetObj.link
+              ? targetObj.link
+              : targetObj.avatar
+              ? targetObj.avatar
+              : ""
+          }
+          alt={!targetObj ? null : targetObj.name}
         />
-        <h2 className='popup__place-name'>{name}</h2>
+        <h2 className='popup__place-name'>
+          {!targetObj ? null : targetObj.name}
+        </h2>
         {navigation && navigationArrows}
       </div>
     </div>

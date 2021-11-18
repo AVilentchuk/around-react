@@ -1,9 +1,12 @@
-import { useState, useEffect, createRef } from "react";
+import { useState, useEffect, createRef, useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
-const Card = ({ cardData, onClick, onCardLike, userId }) => {
+const Card = ({ cardData, onClick, onCardLike, onCardDelete }) => {
+  const currentUser = useContext(CurrentUserContext);
   const tooltip = createRef();
   const { name, likes, link, _id: id } = cardData;
-  const liked = likes.some((like) => like._id === userId);
+
+  const liked = likes.some((like) => like._id === currentUser._id);
 
   const [isTooltipShown, setIsTooltipShown] = useState(false);
 
@@ -21,10 +24,14 @@ const Card = ({ cardData, onClick, onCardLike, userId }) => {
 
   return (
     <div>
-      {console.log(likes)}
+      {/* {console.log(likes)} */}
       <div className='card'>
-        {cardData.owner._id === userId && (
-          <button className='button button_type_delete' type='click'></button>
+        {cardData.owner._id === currentUser._id && (
+          <button
+            className='button button_type_delete'
+            type='click'
+            onClick={() => onCardDelete(id)}
+          ></button>
         )}
         <img
           alt={name}
