@@ -5,55 +5,59 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-  mode: 'production' , //development
-  devtool: 'inline-source-map',
+  mode: "production", //development
+  devtool: "inline-source-map",
   entry: {
-    main: path.resolve(__dirname,"src/pages/index.js")
+    main: path.resolve(__dirname, "src/pages/index.js"),
   },
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "main.js",
     publicPath: "",
-    clean: true
+    clean: true,
   },
-  target: ['web', 'es5'],
+  target: ["web", "es5"],
   stats: { children: true },
   mode: "development",
   devServer: {
     static: path.resolve(__dirname, "dist/"),
     compress: true,
     port: 8081,
-    open: true
+    open: true,
   },
   module: {
     rules: [
       {
         test: /\.js$/,
         loader: "babel-loader",
-        exclude: "/node_modules/"
+        exclude: "/node_modules/",
       },
       {
         test: /\.css$/,
         use: [
           MiniCssExtractPlugin.loader,
           {
-            loader: "css-loader"
+            loader: "css-loader",
+            options: {
+              importLoaders: 1,
+            },
           },
           // add postcss-loader
-          "postcss-loader"
+          { loader: "postcss-loader" },
         ],
+        sideEffects: true,
       },
       {
         test: /\.(png|svg|jpg|gif|woff(2)?|eot|ttf|otf)$/,
-        type: "asset/resource"
+        type: "asset/resource",
       },
-    ]
+    ],
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: "./src/index.html"
+      template: "./src/index.html",
     }),
     new CleanWebpackPlugin(),
-    new MiniCssExtractPlugin()
-  ]
-}
+    new MiniCssExtractPlugin(),
+  ],
+};

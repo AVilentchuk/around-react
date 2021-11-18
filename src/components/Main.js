@@ -1,9 +1,9 @@
 import Card from "./Card";
-
 import profilePhoto from "../assets/images/avatar_photo.png";
+import { useContext } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const Main = ({
-  userInfo,
   onEditProfileClick,
   onAddPlaceClick,
   onEditAvatarClick,
@@ -13,7 +13,7 @@ const Main = ({
   cardsData,
   onDeleteClick,
 }) => {
-  //RenderCards function.
+  //card Component template
   const renderCard = (item) => (
     <Card
       onClick={onCardClick}
@@ -24,6 +24,8 @@ const Main = ({
     />
   );
 
+  const currentUser = useContext(CurrentUserContext);
+
   return (
     <div>
       <main>
@@ -31,10 +33,10 @@ const Main = ({
           <div className='profile__photo-container'>
             <img
               className='profile__photo'
-              src={userInfo ? userInfo.avatar : profilePhoto}
+              src={currentUser ? currentUser.avatar : profilePhoto}
               alt={
-                userInfo
-                  ? `Photo of ${userInfo.name}`
+                currentUser
+                  ? `Photo of ${currentUser.name}`
                   : "Photo of Kristine Weiss"
               }
             />
@@ -46,14 +48,14 @@ const Main = ({
               <button
                 className='button button_type_enlarge-profile-image'
                 onClick={() => {
-                  onEnlargeAvatarClick(userInfo);
+                  onEnlargeAvatarClick(currentUser);
                 }}
               ></button>
             </div>
           </div>
           <div className='profile__description'>
             <h1 className='profile__name'>
-              {userInfo ? userInfo.name : "Kristine Weiss"}
+              {currentUser ? currentUser.name : "Kristine Weiss"}
             </h1>
             <button
               className='button profile__button-edit'
@@ -62,8 +64,8 @@ const Main = ({
               onClick={onEditProfileClick}
             ></button>
             <p className='profile__about'>
-              {userInfo
-                ? userInfo.about
+              {currentUser
+                ? currentUser.about
                 : "Travel guide, food enthusiastic and culture lover"}
             </p>
           </div>

@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import mainApi from "../utils/Api";
+import mainApi from "../utils/api";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -170,7 +170,6 @@ function App() {
             onEditAvatarClick={handleEditAvatarClick}
             onEnlargeAvatarClick={handleEnlargeAvatarClick}
             onCardClick={handleCardClick}
-            userInfo={currentUser}
             setUserData={handleUpdateUserData}
             handleCardLike={handleCardLike}
             onDeleteClick={handleDeleteClick}
