@@ -24,7 +24,6 @@ const Card = ({ cardData, onClick, onCardLike, onCardDelete }) => {
 
   return (
     <div>
-      {/* {console.log(likes)} */}
       <div className='card'>
         {cardData.owner._id === currentUser._id && (
           <button
