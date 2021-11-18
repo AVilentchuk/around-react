@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
-import mainApi from "../utils/api";
+import api from "../utils/api";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
@@ -45,7 +45,7 @@ function App() {
   //<<START>>data fetching functions <<START>>
   const getUserInfo = async () => {
     try {
-      const callData = await mainApi.getProfile();
+      const callData = await api.getProfile();
       callData && setCurrentUser(callData);
     } catch (error) {
       console.log(error);
@@ -54,7 +54,7 @@ function App() {
 
   const getCards = async () => {
     try {
-      const callData = await mainApi.getInitialCards();
+      const callData = await api.getInitialCards();
       callData && setCardsData(callData)
     }
     catch (error) { console.log(error) }
@@ -64,12 +64,12 @@ function App() {
   const handleCardLike = async (id, status) => {
     if (status)
       try {
-        const result = await mainApi.dislikePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
+        const result = await api.dislikePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
         setCardsData(result)
       }
       catch (error) { console.log(error) } else
       try {
-        const result = await mainApi.likePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
+        const result = await api.likePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
         setCardsData(result);
       }
       catch (error) { console.log(error) };
@@ -78,14 +78,14 @@ function App() {
   const handleDeleteCard = async () => {
     const id = selectedCard._id;
     try {
-      mainApi.deleteCardPost(id).then(setCardsData(cardsData.filter(card => card._id !== id)))
+      api.deleteCardPost(id).then(setCardsData(cardsData.filter(card => card._id !== id)))
     }
     catch (error) { console.log(error) }
   }
 
   const handleAddCard = async (card) => {
     try {
-      const newCard = await mainApi.postNewCard(card)
+      const newCard = await api.postNewCard(card)
       setCardsData(Cards => {
         return [newCard].concat(Cards)
       })
@@ -133,11 +133,11 @@ function App() {
   //<<END>>Window openers & closers<<END>>
   //<<START>>Profile updating handlers<<START>>
   const handleUpdateUserData = (data) => {
-    mainApi.updateProfile(data).then(setCurrentUser(data));
+    api.updateProfile(data).then(setCurrentUser(data));
   };
 
   const handleUpdateAvatarImage = (data) => {
-    mainApi.updateProfilePhoto(data.avatar).then(setCurrentUser(data));
+    api.updateProfilePhoto(data.avatar).then(setCurrentUser(data));
   };
   //<<END>>Profile updating handlers<<END>>
   //<<START>>Navigation handlers<<START>>
