@@ -1,15 +1,20 @@
 import { useState } from "react";
 import PopupWithForm from "./PopupWithForm";
 
-const AddPlacePopup = ({ isOpen, onClose, addNewCard }) => {
+const AddPlacePopup = ({ isOpen, onClose, addNewCard, useKey }) => {
   const [name, setName] = useState("");
   const [link, setLink] = useState("");
 
   const fromSubmit = (e) => {
     e.preventDefault();
     addNewCard({ name, link });
+    //resets form fields.
+    setName("");
+    setLink("");
     onClose();
   };
+
+  useKey("Escape", onClose, isOpen);
 
   return (
     <div>
@@ -28,6 +33,7 @@ const AddPlacePopup = ({ isOpen, onClose, addNewCard }) => {
             name='name'
             id='place-title'
             placeholder='Title'
+            value={name}
             required
             minLength='1'
             maxLength='30'
@@ -42,6 +48,7 @@ const AddPlacePopup = ({ isOpen, onClose, addNewCard }) => {
             name='link'
             id='image-link'
             placeholder='Image link'
+            value={link}
             required
             onChange={(e) => setLink(e.target.value)}
           />

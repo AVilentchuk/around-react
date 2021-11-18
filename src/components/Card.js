@@ -30,7 +30,7 @@ const Card = ({ cardData, onClick, onCardLike, onCardDelete }) => {
           <button
             className='button button_type_delete'
             type='click'
-            onClick={() => onCardDelete(id)}
+            onClick={() => onCardDelete(cardData)}
           ></button>
         )}
         <img

@@ -1,8 +1,6 @@
-import { useContext, useEffect, useState } from "react";
 import Card from "./Card";
-// import mainApi from "../utils/Api";
+
 import profilePhoto from "../assets/images/avatar_photo.png";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
 const Main = ({
   userInfo,
@@ -13,26 +11,15 @@ const Main = ({
   onCardClick,
   handleCardLike,
   cardsData,
-  handleDeleteCard,
+  onDeleteClick,
 }) => {
-  //States
-
-  //<<START>> ASync functions <<START>>
-
-  //<<END>> ASync functions <<END>>
-
-  //initialization
-  // useEffect(() => {
-  //   getUserInfo();
-  // }, []);
-
   //RenderCards function.
   const renderCard = (item) => (
     <Card
       onClick={onCardClick}
       cardData={item}
       onCardLike={handleCardLike}
-      onCardDelete={handleDeleteCard}
+      onCardDelete={onDeleteClick}
       key={item._id}
     />
   );

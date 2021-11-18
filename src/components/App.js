@@ -1,37 +1,38 @@
 import { useEffect, useState, useRef } from "react";
+import { CurrentUserContext } from "../contexts/CurrentUserContext";
+import mainApi from "../utils/Api";
 import Header from "./Header";
 import Main from "./Main";
 import Footer from "./Footer";
-import PopupWithForm from "./PopupWithForm";
 import ImagePopup from "./ImagePopup";
-import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import EditProfilePopup from "./EditProfilePopup";
-import mainApi from "../utils/Api";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-
-
+import ConfirmPopup from "./ConfirmPopup";
 
 function App() {
+  //isOpened
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
   const [isPlacePopupOpen, setIsPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isEnlargeAvatarPopupOpen, setIsEnlargeAvatarPopupOpen] =
     useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
+  //data holding states
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cardsData, setCardsData] = useState([]);
-  // const [selectedSides, setSelectedSides] = useState([]);
 
-  function useKey(key, callback) {
+  //function to add event listeners
+  function useKey(key, callback, condition) {
     const callbackRef = useRef(callback);
     useEffect(() => {
       callbackRef.current = callback;
     })
 
     useEffect(() => {
-
+      if (!condition) { return; }
       function handle(event) {
         if (event.code === key) {
           callbackRef.current(event)
@@ -39,9 +40,9 @@ function App() {
       }
       document.addEventListener("keydown", handle);
       return () => document.removeEventListener("keydown", handle);
-    }, [key])
+    }, [key, condition])
   }
-
+  //<<START>>data fetching functions <<START>>
   const getUserInfo = async () => {
     try {
       const callData = await mainApi.getProfile();
@@ -51,6 +52,15 @@ function App() {
     }
   };
 
+  const getCards = async () => {
+    try {
+      const callData = await mainApi.getInitialCards();
+      callData && setCardsData(callData)
+    }
+    catch (error) { console.log(error) }
+  }
+  //<<END>>data fetching functions <<END>>
+  //<<START>>Card actions handles<<START>>
   const handleCardLike = async (id, status) => {
     if (status)
       try {
@@ -65,22 +75,25 @@ function App() {
       catch (error) { console.log(error) };
   };
 
-  const handleDeleteCard = (id) => {
+  const handleDeleteCard = async () => {
+    const id = selectedCard._id;
     try {
       mainApi.deleteCardPost(id).then(setCardsData(cardsData.filter(card => card._id !== id)))
     }
     catch (error) { console.log(error) }
   }
 
-
-  const getCards = async () => {
+  const handleAddCard = async (card) => {
     try {
-      const callData = await mainApi.getInitialCards();
-      callData && setCardsData(callData)
+      const newCard = await mainApi.postNewCard(card)
+      setCardsData(Cards => {
+        return [newCard].concat(Cards)
+      })
     }
-    catch (error) { console.log("111", error) }
+    catch (error) { console.log(error) }
   }
-
+  //<<END>>Card actions handles<<END>>
+  //<<START>>Window openers & closers<<START>>
   const handleEditProfileClick = () => {
     setIsEditProfilePopupOpen(true);
   };
@@ -102,7 +115,23 @@ function App() {
     setSelectedCard(cardClicked);
     setIsImagePopupOpen(true);
   };
+  const handleDeleteClick = (cardClicked) => {
+    setSelectedCard(cardClicked)
+    setIsConfirmPopupOpen(true)
+  };
 
+
+  // };
+  const handleClose = () => {
+    setIsImagePopupOpen(false);
+    setIsEnlargeAvatarPopupOpen(false);
+    setIsEditAvatarPopupOpen(false);
+    setIsPlacePopupOpen(false);
+    setIsEditProfilePopupOpen(false);
+    setIsConfirmPopupOpen(false);
+  };
+  //<<END>>Window openers & closers<<END>>
+  //<<START>>Profile updating handlers<<START>>
   const handleUpdateUserData = (data) => {
     mainApi.updateProfile(data).then(setCurrentUser(data));
   };
@@ -110,36 +139,8 @@ function App() {
   const handleUpdateAvatarImage = (data) => {
     mainApi.updateProfilePhoto(data.avatar).then(setCurrentUser(data));
   };
-
-  const handleAddCard = async (card) => {
-    try {
-      const newCard = await mainApi.postNewCard(card)
-      setCardsData(Cards => {
-        return [newCard].concat(Cards)
-      })
-    }
-    catch (error) { console.log(error) }
-  }
-  // const getTargetSiblings = () => {
-  //   const index = cardsData.findIndex(item => item === selectedCard);
-  //   const leftOfIndex = parseInt(index - 1) >= 0 ? parseInt(index - 1) : cardsData.length - 1;
-  //   const rightOfIndex = parseInt(index + 1) <= cardsData.length - 1 ? parseInt(index + 1) : 0;
-  //   console.log(index)
-  //   setSelectedSides([cardsData[leftOfIndex], cardsData[rightOfIndex]]);
-
-  // }
-
-  const handleNavigationClick = (direction) => {
-    let index = cardsData.findIndex(item => item === selectedCard);
-    if (direction === 'left') {
-      index = parseInt(index - 1) >= 0 ? parseInt(index - 1) : cardsData.length - 1;
-    }
-    if (direction === 'right') {
-      index = parseInt(index + 1) <= cardsData.length - 1 ? parseInt(index + 1) : 0;
-    }
-    setSelectedCard(cardsData[index])
-  }
-
+  //<<END>>Profile updating handlers<<END>>
+  //<<START>>Navigation handlers<<START>>
   const goLeft = () => {
     let index = cardsData.findIndex(item => item === selectedCard);
     index = parseInt(index - 1) >= 0 ? parseInt(index - 1) : cardsData.length - 1;
@@ -150,16 +151,9 @@ function App() {
     index = parseInt(index + 1) <= cardsData.length - 1 ? parseInt(index + 1) : 0;
     setSelectedCard(cardsData[index])
   }
+  //<<END>>Navigation handlers<<END>>
 
-
-
-  const handleClose = () => {
-    setIsImagePopupOpen(false);
-    setIsEnlargeAvatarPopupOpen(false);
-    setIsEditAvatarPopupOpen(false);
-    setIsPlacePopupOpen(false);
-    setIsEditProfilePopupOpen(false);
-  };
+  //initialization
   useEffect(() => {
     getCards();
     getUserInfo()
@@ -179,122 +173,37 @@ function App() {
             userInfo={currentUser}
             setUserData={handleUpdateUserData}
             handleCardLike={handleCardLike}
-            handleDeleteCard={handleDeleteCard}
+            onDeleteClick={handleDeleteClick}
             cardsData={cardsData}
-
-
 
           />
           <Footer />
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={handleClose}
-            // currentUser={currentUser}
             updateCurrentUser={handleUpdateUserData}
+            useKey={useKey}
           />
-          {/* <PopupWithForm
-            isOpen={isEditProfilePopupOpen}
-            onClose={handleClose}
-            windowId='w-edit'
-            formHeader='Edit Profile'
-            formName='editWindow'
-          >
-            <label htmlFor='name' className='form__field'>
-              <input
-                className='form__input'
-                type='text'
-                name='name'
-                id='name'
-                placeholder='Insert name here...'
-                required
-                minLength='2'
-                maxLength='40'
-              />
-              <span className='form__input-error'></span>
-            </label>
-            <label htmlFor='about' className='form__field'>
-              <input
-                className='form__input'
-                type='text'
-                name='about'
-                id='about'
-                placeholder='Insert job here...'
-                required
-                minLength='2'
-                maxLength='200'
-              />
-              <span className='form__input-error'></span>
-            </label>
-          </PopupWithForm> */}
+
           <AddPlacePopup
             isOpen={isPlacePopupOpen}
             onClose={handleClose}
             addNewCard={handleAddCard}
+            useKey={useKey}
           />
 
-          {/* <PopupWithForm
-            isOpen={isPlacePopupOpen}
-            onClose={handleClose}
-            windowId='w-add'
-            formHeader='New place'
-            formName='addWindow'
-          >
-            <label htmlFor='place-title' className='form__field'>
-              <input
-                className='form__input'
-                type='text'
-                name='name'
-                id='place-title'
-                placeholder='Title'
-                required
-                minLength='1'
-                maxLength='30'
-              />
-              <span className='form__input-error'></span>
-            </label>
-            <label htmlFor='image-link' className='form__field'>
-              <input
-                className='form__input'
-                type='url'
-                name='link'
-                id='image-link'
-                placeholder='Image link'
-                required
-              />
-              <span className='form__input-error'></span>
-            </label>
-          </PopupWithForm> */}
           <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={handleClose}
             updateCurrentUser={handleUpdateAvatarImage}
+            useKey={useKey}
           />
-          {/* <PopupWithForm
-            isOpen={isEditAvatarPopupOpen}
-            onClose={handleClose}
-            windowId='w-editpic'
-            formHeader='Change profile picture'
-            formName='editprofpic'
-          >
-            <label htmlFor='pictureurl' className='form__field'>
-              <input
-                className='form__input'
-                type='url'
-                name='avatar'
-                id='pictureurl'
-                placeholder='insert url for picture'
-                required
-              />
-              <span className='form__input-error'></span>
-            </label>
-          </PopupWithForm> */}
 
           <ImagePopup
             isOpen={isImagePopupOpen}
             onClose={handleClose}
             id='w-img'
             targetObj={selectedCard}
-            navigationHandler={handleNavigationClick}
             navigation={true}
             useKey={useKey}
             goLeft={goLeft}
@@ -307,6 +216,13 @@ function App() {
             targetObj={currentUser}
             navigation={false}
             useKey={useKey}
+            goLeft={goLeft}
+            goRight={goRight}
+          />
+          <ConfirmPopup
+            isOpen={isConfirmPopupOpen}
+            onClose={handleClose}
+            confirmDelete={handleDeleteCard}
           />
         </CurrentUserContext.Provider>
       </div>

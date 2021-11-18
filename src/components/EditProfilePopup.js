@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 import PopupWithForm from "./PopupWithForm";
-const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser }) => {
+const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const currentUser = useContext(CurrentUserContext);
@@ -9,7 +9,7 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser }) => {
   useEffect(() => {
     setName(currentUser.name);
     setDescription(currentUser.about);
-  }, [currentUser]);
+  }, [currentUser, isOpen]);
 
   const formSubmit = (e) => {
     e.preventDefault();
@@ -18,6 +18,9 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser }) => {
     );
     onClose();
   };
+
+  useKey("Escape", onClose, isOpen);
+
   return (
     <PopupWithForm
       isOpen={isOpen}
@@ -33,7 +36,7 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser }) => {
           type='text'
           name='name'
           id='name'
-          value={name}
+          value={name || ""}
           placeholder='Insert name here...'
           required
           minLength='2'
@@ -48,7 +51,7 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser }) => {
           type='text'
           name='about'
           id='about'
-          value={description}
+          value={description || ""}
           placeholder='Insert job here...'
           required
           minLength='2'

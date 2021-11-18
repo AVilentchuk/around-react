@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 const ImagePopup = ({
   navigation,
   targetObj,
@@ -23,9 +21,9 @@ const ImagePopup = ({
     ></div>,
   ];
 
-  useKey("ArrowRight", goRight);
-  useKey("ArrowLeft", goLeft);
-  useKey("Escape", onClose);
+  useKey("ArrowRight", goRight, isOpen);
+  useKey("ArrowLeft", goLeft, isOpen);
+  useKey("Escape", onClose, isOpen);
 
   return (
     <div
