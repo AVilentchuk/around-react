@@ -41,7 +41,6 @@ export const loader = ({
       button.textContent = `Failed`;
       setTimeout("", completeTimeDelay * 2);
       clearInterval(intervalController);
-      console.log(res);
     })
     .finally(() => {
       setTimeout(() => {
