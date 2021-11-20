@@ -10,14 +10,11 @@ const EditAvatarPopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
   useEffect(() => {
     avatarInput.current.value = currentUser.avatar;
   }, [currentUser, isOpen]);
-  useEffect(() => {}, [isOpen]);
 
-  const formSubmit = (e) => {
-    e.preventDefault();
-    updateCurrentUser(
+  const formSubmit = () => {
+    return updateCurrentUser(
       Object.assign({}, currentUser, { avatar: avatarInput.current.value })
     );
-    onClose();
   };
 
   useKey("Escape", onClose, isOpen);
@@ -30,6 +27,8 @@ const EditAvatarPopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
       formHeader='Change profile picture'
       formName='editprofpic'
       onSubmit={formSubmit}
+      validate={true}
+      buttonText="Update"
     >
       <label htmlFor='pictureurl' className='form__field'>
         <input

@@ -1,13 +1,10 @@
-const customFetch = (url, properties) => {
-  return fetch(url, properties)
-    .then((response) => {
-      if (response.ok) return response.json();
-      return Promise.reject(
-        `Failed with status:( ${response.status} ${response.statusText})`
-      );
-    })
-    .catch((error) => console.log(error));
-};
+const customFetch = (url, properties) =>
+  fetch(url, properties).then((response) => {
+    if (response.ok) return response.json();
+    return Promise.reject(
+      `Failed with status:( ${response.status} ${response.statusText} )`
+    );
+  });
 
 class Api {
   constructor({ groupId, apiKey, baseUrl }) {

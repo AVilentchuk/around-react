@@ -11,12 +11,10 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
     setDescription(currentUser.about);
   }, [currentUser, isOpen]);
 
-  const formSubmit = (e) => {
-    e.preventDefault();
-    updateCurrentUser(
+  const formSubmit = () => {
+    return updateCurrentUser(
       Object.assign({}, currentUser, { name: name, about: description })
     );
-    onClose();
   };
 
   useKey("Escape", onClose, isOpen);
@@ -29,6 +27,8 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
       formHeader='Edit Profile'
       formName='editWindow'
       onSubmit={formSubmit}
+      validate={true}
+      buttonText="Save"
     >
       <label htmlFor='name' className='form__field'>
         <input

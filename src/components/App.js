@@ -18,7 +18,7 @@ function App() {
   const [isEnlargeAvatarPopupOpen, setIsEnlargeAvatarPopupOpen] =
     useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
-  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false)
+  const [isConfirmPopupOpen, setIsConfirmPopupOpen] = useState(false);
   //data holding states
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
@@ -29,18 +29,20 @@ function App() {
     const callbackRef = useRef(callback);
     useEffect(() => {
       callbackRef.current = callback;
-    })
+    });
 
     useEffect(() => {
-      if (!condition) { return; }
+      if (!condition) {
+        return;
+      }
       function handle(event) {
         if (event.code === key) {
-          callbackRef.current(event)
+          callbackRef.current(event);
         }
       }
       document.addEventListener("keydown", handle);
       return () => document.removeEventListener("keydown", handle);
-    }, [key, condition])
+    }, [key, condition]);
   }
   //<<START>>data fetching functions <<START>>
   const getUserInfo = async () => {
@@ -55,43 +57,64 @@ function App() {
   const getCards = async () => {
     try {
       const callData = await api.getInitialCards();
-      callData && setCardsData(callData)
+      callData && setCardsData(callData);
+    } catch (error) {
+      console.log(error);
     }
-    catch (error) { console.log(error) }
-  }
+  };
   //<<END>>data fetching functions <<END>>
   //<<START>>Card actions handles<<START>>
   const handleCardLike = async (id, status) => {
     if (status)
       try {
-        const result = await api.dislikePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
-        setCardsData(result)
-      }
-      catch (error) { console.log(error) } else
-      try {
-        const result = await api.likePhoto(id).then(newCardData => (cardsData.map((card) => card = newCardData._id === card._id ? newCardData : card)))
+        const result = await api
+          .dislikePhoto(id)
+          .then((newCardData) =>
+            cardsData.map(
+              (card) =>
+                (card = newCardData._id === card._id ? newCardData : card)
+            )
+          );
         setCardsData(result);
+      } catch (error) {
+        console.log(error);
       }
-      catch (error) { console.log(error) };
+    else
+      try {
+        const result = await api
+          .likePhoto(id)
+          .then((newCardData) =>
+            cardsData.map(
+              (card) =>
+                (card = newCardData._id === card._id ? newCardData : card)
+            )
+          );
+        setCardsData(result);
+      } catch (error) {
+        console.log(error);
+      }
   };
 
   const handleDeleteCard = async () => {
     const id = selectedCard._id;
     try {
-      api.deleteCardPost(id).then(setCardsData(cardsData.filter(card => card._id !== id)))
+      await api.deleteCardPost(id);
+      return setCardsData(cardsData.filter((card) => card._id !== id));
+    } catch (error) {
+      return Promise.reject(error)
     }
-    catch (error) { console.log(error) }
-  }
+  };
 
   const handleAddCard = async (card) => {
     try {
-      const newCard = await api.postNewCard(card)
-      setCardsData(Cards => {
-        return [newCard].concat(Cards)
-      })
+      await api.postNewCard(card).then((res) =>
+        setCardsData((Cards) => {
+          return [res].concat(Cards)
+        })).catch((error) => Promise.reject(error))
+    } catch (error) {
+      return Promise.reject(error)
     }
-    catch (error) { console.log(error) }
-  }
+  };
   //<<END>>Card actions handles<<END>>
   //<<START>>Window openers & closers<<START>>
   const handleEditProfileClick = () => {
@@ -116,10 +139,9 @@ function App() {
     setIsImagePopupOpen(true);
   };
   const handleDeleteClick = (cardClicked) => {
-    setSelectedCard(cardClicked)
-    setIsConfirmPopupOpen(true)
+    setSelectedCard(cardClicked);
+    setIsConfirmPopupOpen(true);
   };
-
 
   // };
   const handleClose = () => {
@@ -132,32 +154,45 @@ function App() {
   };
   //<<END>>Window openers & closers<<END>>
   //<<START>>Profile updating handlers<<START>>
-  const handleUpdateUserData = (data) => {
-    api.updateProfile(data).then(setCurrentUser(data));
+  const handleUpdateUserData = async (data) => {
+    try {
+      return api
+        .updateProfile(data)
+        .then((res) => { setCurrentUser(res) })
+        .catch((error) => Promise.reject(error));
+
+    } catch (error) { return Promise.reject(error) }
   };
 
-  const handleUpdateAvatarImage = (data) => {
-    api.updateProfilePhoto(data.avatar).then(setCurrentUser(data));
+  const handleUpdateAvatarImage = async (data) => {
+    try {
+      return await api
+        .updateProfilePhoto(data.avatar).then(res => { setCurrentUser(res) })
+        .catch((error) => Promise.reject(error))
+
+    } catch (error) { return Promise.reject(error) }
   };
   //<<END>>Profile updating handlers<<END>>
   //<<START>>Navigation handlers<<START>>
   const goLeft = () => {
-    let index = cardsData.findIndex(item => item === selectedCard);
-    index = parseInt(index - 1) >= 0 ? parseInt(index - 1) : cardsData.length - 1;
-    setSelectedCard(cardsData[index])
-  }
+    let index = cardsData.findIndex((item) => item === selectedCard);
+    index =
+      parseInt(index - 1) >= 0 ? parseInt(index - 1) : cardsData.length - 1;
+    setSelectedCard(cardsData[index]);
+  };
   const goRight = () => {
-    let index = cardsData.findIndex(item => item === selectedCard);
-    index = parseInt(index + 1) <= cardsData.length - 1 ? parseInt(index + 1) : 0;
-    setSelectedCard(cardsData[index])
-  }
+    let index = cardsData.findIndex((item) => item === selectedCard);
+    index =
+      parseInt(index + 1) <= cardsData.length - 1 ? parseInt(index + 1) : 0;
+    setSelectedCard(cardsData[index]);
+  };
   //<<END>>Navigation handlers<<END>>
 
   //initialization
   useEffect(() => {
     getCards();
-    getUserInfo()
-  }, [])
+    getUserInfo();
+  }, []);
 
   return (
     <div className='page'>
@@ -174,7 +209,6 @@ function App() {
             handleCardLike={handleCardLike}
             onDeleteClick={handleDeleteClick}
             cardsData={cardsData}
-
           />
           <Footer />
           <EditProfilePopup
