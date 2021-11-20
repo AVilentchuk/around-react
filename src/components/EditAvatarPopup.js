@@ -8,7 +8,7 @@ const EditAvatarPopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
 
   //fills the field on open with current value.
   useEffect(() => {
-    avatarInput.current.value = currentUser.avatar;
+    if (isOpen) avatarInput.current.value = currentUser.avatar;
   }, [currentUser, isOpen]);
 
   const formSubmit = () => {
@@ -28,7 +28,7 @@ const EditAvatarPopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
       formName='editprofpic'
       onSubmit={formSubmit}
       validate={true}
-      buttonText="Update"
+      buttonText='Update'
     >
       <label htmlFor='pictureurl' className='form__field'>
         <input

@@ -7,8 +7,10 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
   const currentUser = useContext(CurrentUserContext);
 
   useEffect(() => {
-    setName(currentUser.name);
-    setDescription(currentUser.about);
+    if (isOpen) {
+      setName(currentUser.name);
+      setDescription(currentUser.about);
+    }
   }, [currentUser, isOpen]);
 
   const formSubmit = () => {
@@ -28,7 +30,7 @@ const EditProfilePopup = ({ isOpen, onClose, updateCurrentUser, useKey }) => {
       formName='editWindow'
       onSubmit={formSubmit}
       validate={true}
-      buttonText="Save"
+      buttonText='Save'
     >
       <label htmlFor='name' className='form__field'>
         <input

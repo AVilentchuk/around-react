@@ -10,7 +10,7 @@ const AddPlacePopup = ({ isOpen, onClose, addNewCard, useKey }) => {
   };
 
   useEffect(() => {
-    setName("");
+    if (isOpen) setName("");
     setLink("");
   }, [isOpen]);
 

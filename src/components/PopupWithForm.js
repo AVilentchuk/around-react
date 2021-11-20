@@ -26,7 +26,7 @@ const PopupWithForm = ({
   }, [validate]);
 
   useEffect(() => {
-    if (form) form.resetValidation();
+    if (form && isOpen) form.resetValidation();
   }, [isOpen, form]);
 
   return (
