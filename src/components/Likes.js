@@ -1,12 +1,11 @@
-import { createRef, useEffect } from "react";
-import { useState } from "react/cjs/react.development";
+import { createRef, useEffect, useState } from "react";
 import { useMousePosition } from "./App";
 
 const Likes = ({ likes, target, isOver }) => {
   const likesRef = createRef();
   const position = useMousePosition();
   const selfLike = likes.some((item) => item._id === target) ? "you " : "";
-  const [likesUpdated, setLikesUpdated] = useState([]);
+  const [likesUpdated, setLikesUpdated] = useState();
 
   // console.log(position)
   useEffect(() => {
