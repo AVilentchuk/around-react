@@ -1,9 +1,13 @@
 import { useState, useEffect, createRef, useContext } from "react";
 import { CurrentUserContext } from "../contexts/CurrentUserContext";
 
+import Likes from "./Likes";
+
 const Card = ({ cardData, onClick, onCardLike, onCardDelete }) => {
   const currentUser = useContext(CurrentUserContext);
+  const [isOver, setIsOver] = useState(false);
   const tooltip = createRef();
+
   const { name, likes, link, _id: id } = cardData;
 
   const liked = likes.some((like) => like._id === currentUser._id);
@@ -41,7 +45,23 @@ const Card = ({ cardData, onClick, onCardLike, onCardDelete }) => {
         <h2 ref={tooltip} className='card__text'>
           {name}
         </h2>
-        <div className='card__likes-container'>
+
+        <div
+          className='card__likes-container'
+          onMouseLeave={() => {
+            setIsOver(false);
+          }}
+        >
+          {likes.length ? (
+            <Likes
+              target={currentUser._id}
+              likes={likes}
+              isOver={isOver}
+              key={id ? id : null}
+            />
+          ) : (
+            ""
+          )}
           <button
             className={`button card__like-button ${
               liked && "card__like-button_active"
@@ -49,6 +69,9 @@ const Card = ({ cardData, onClick, onCardLike, onCardDelete }) => {
             id='likebtn'
             aria-label='heart icon (like)'
             onClick={handleLikeClick}
+            onMouseOver={() => {
+              setIsOver(true);
+            }}
           />
           <label
             className='card__like-label'

@@ -9,7 +9,21 @@ import EditProfilePopup from "./EditProfilePopup";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 import ConfirmPopup from "./ConfirmPopup";
+//mousePosition
+export const useMousePosition = () => {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
+  useEffect(() => {
+    const setFromEvent = (e) => setPosition({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", setFromEvent);
+
+    return () => {
+      window.removeEventListener("mousemove", setFromEvent);
+    };
+  }, []);
+
+  return position;
+};
 function App() {
   //isOpened
   const [isEditProfilePopupOpen, setIsEditProfilePopupOpen] = useState(false);
@@ -23,6 +37,10 @@ function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [currentUser, setCurrentUser] = useState({});
   const [cardsData, setCardsData] = useState([]);
+
+
+
+
 
   //function to add event listeners
   function useKey(key, callback, condition) {
